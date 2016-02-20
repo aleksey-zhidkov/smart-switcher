@@ -27,8 +27,14 @@ def minimize_window(window_id):
 
 def toggle_other_window(windowclasses):
 	cd = current_desktop()
-	aw = active_window()
 	all_wins = all_windows(cd)
+	if len(all_wins) == 0:
+		return
+
+	aw = active_window()
+	if len(aw) == 0:
+		activate_window(all_wins[0])
+		return
 
 	spec_windows = []
 	for windowclass in windowclasses:
