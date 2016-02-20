@@ -61,6 +61,6 @@ def toggle_window_class(windowclass):
 
 
 if sys.argv[1] == '-n':
-	toggle_other_window(["subl", "nemo", "term", "firefox"])
+	toggle_other_window(sys.argv[2:])
 else:
 	toggle_window_class(sys.argv[1])
