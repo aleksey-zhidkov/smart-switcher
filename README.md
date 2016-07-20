@@ -20,3 +20,5 @@ Smart Switcher
 **Для работы скрпита необхидимо чтобы в системе была установлена утилита [xdotool](https://github.com/jordansissel/xdotool)**
 
 **Получить класс окна можно с помощью утилиты `xprop`**
+
+**Пример команды (активация Sublime Text 3): `smart_switcher.py subl3`**
