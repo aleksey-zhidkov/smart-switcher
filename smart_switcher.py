@@ -12,7 +12,7 @@ def current_desktop():
 	return f.read().strip()
 
 def windows_by_class(current_desktop, windowclass):
-	f = os.popen('xdotool search --desktop ' + current_desktop + ' --class ' + windowclass)
+	f = os.popen('xdotool search --desktop ' + current_desktop + ' --class "' + windowclass + '"')
 	return f.read().strip().split('\n')
 
 def all_windows(current_desktop):
@@ -25,7 +25,7 @@ def activate_window(window_id):
 def minimize_window(window_id):
 	os.system('xdotool windowminimize ' + window_id)
 
-def toggle_other_window(windowclasses):
+def toggle_other_window(windowclass):
 	cd = current_desktop()
 	all_wins = all_windows(cd)
 	if len(all_wins) == 0:
@@ -36,9 +36,7 @@ def toggle_other_window(windowclasses):
 		activate_window(all_wins[0])
 		return
 
-	spec_windows = []
-	for windowclass in windowclasses:
-		spec_windows.extend(windows_by_class(cd, windowclass))
+	spec_windows = windows_by_class(cd, windowclass)
 
 	for window in all_wins:
 		if window not in spec_windows and window != aw:
@@ -67,6 +65,6 @@ def toggle_window_class(windowclass):
 
 
 if sys.argv[1] == '-n':
-	toggle_other_window(sys.argv[2:])
+	toggle_other_window('|'.join(map(lambda x:"(" + x + ")", sys.argv[2:])))
 else:
-	toggle_window_class(sys.argv[1])
+	toggle_window_class('|'.join(map(lambda x:"(" + x + ")", sys.argv[1:])))
