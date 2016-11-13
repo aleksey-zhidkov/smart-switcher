@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import os
+import subprocess
 import sys
 
 def active_window():
@@ -13,7 +14,7 @@ def current_desktop():
 
 def windows_by_class(current_desktop, windowclass):
 	f = os.popen('xdotool search --desktop ' + current_desktop + ' --class "' + windowclass + '"')
-	return f.read().strip().split('\n')
+	return [a for a in f.read().strip().split('\n') if len(a) > 0]
 
 def all_windows(current_desktop):
 	f = os.popen('xdotool search --desktop ' + current_desktop + ' .')
@@ -47,12 +48,14 @@ def toggle_other_window(windowclass):
 	minimize_window(aw)
 
 
-def toggle_window_class(windowclass):
+def toggle_window_class(windowclass, runCmd):
 	cd = current_desktop()
 	windows = windows_by_class(cd, windowclass)
 	aw = active_window()
 
-	if len(windows) == 1:
+	if len(windows) == 0 and runCmd != None:
+		subprocess.Popen([runCmd], stdin=None, stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
+	elif len(windows) == 1:
 		if windows[0] == aw:
 			minimize_window(windows[0])
 		else:
@@ -67,4 +70,4 @@ def toggle_window_class(windowclass):
 if sys.argv[1] == '-n':
 	toggle_other_window('|'.join(map(lambda x:"(" + x + ")", sys.argv[2:])))
 else:
-	toggle_window_class('|'.join(map(lambda x:"(" + x + ")", sys.argv[1:])))
+	toggle_window_class(sys.argv[1], (sys.argv[2] if len(sys.argv) == 3 else None))
